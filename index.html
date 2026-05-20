@@ -13,7 +13,6 @@
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════ AUTH SCREEN -->
 <div id="auth-screen" class="screen active">
   <div class="brand">
     <div class="brand-icon">
@@ -23,62 +22,37 @@
     </div>
     TicTacToe · Online
   </div>
-
   <div class="auth-card">
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchTab('login')">Entrar</button>
       <button class="auth-tab" onclick="switchTab('register')">Registro</button>
     </div>
-
-    <!-- Login -->
     <div id="login-form">
-      <div class="field">
-        <label>Usuario</label>
-        <input type="text" id="login-user" placeholder="tu_nombre" autocomplete="username">
-      </div>
-      <div class="field">
-        <label>Contraseña</label>
-        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
-      </div>
+      <div class="field"><label>Usuario</label><input type="text" id="login-user" placeholder="tu_nombre" autocomplete="username"></div>
+      <div class="field"><label>Contraseña</label><input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"></div>
       <button class="btn" onclick="doLogin()">Entrar al juego</button>
     </div>
-
-    <!-- Register -->
     <div id="register-form" class="hidden">
-      <div class="field">
-        <label>Usuario</label>
-        <input type="text" id="reg-user" placeholder="tu_nombre" autocomplete="username">
-      </div>
-      <div class="field">
-        <label>Contraseña</label>
-        <input type="password" id="reg-pass" placeholder="Min. 8 chars, mayús, número, símbolo" autocomplete="new-password">
-      </div>
+      <div class="field"><label>Usuario</label><input type="text" id="reg-user" placeholder="tu_nombre" autocomplete="username"></div>
+      <div class="field"><label>Contraseña</label><input type="password" id="reg-pass" placeholder="Min. 8 chars, mayús, número, símbolo" autocomplete="new-password"></div>
       <button class="btn" onclick="doRegister()">Crear cuenta</button>
     </div>
-
     <p class="error-msg" id="auth-error"></p>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ LOBBY SCREEN -->
 <div id="lobby-screen" class="screen">
   <div class="lobby-layout">
-
-    <!-- Sidebar: usuarios online -->
     <aside class="sidebar">
       <div class="sidebar-header">
         <span class="sidebar-title">Online</span>
         <span class="me-badge" id="me-badge">—</span>
       </div>
-      <div class="user-list" id="user-list">
-        <!-- Populated dynamically -->
-      </div>
+      <div class="user-list" id="user-list"></div>
       <div class="sidebar-footer">
         <button class="logout-btn" onclick="doLogout()">↩ Salir</button>
       </div>
     </aside>
-
-    <!-- Main -->
     <main class="lobby-main">
       <div class="lobby-hero">
         <h1>TIC<span>TAC</span>TOE</h1>
@@ -92,10 +66,8 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ GAME SCREEN -->
 <div id="game-screen" class="screen">
   <div class="game-layout">
-
     <div class="scoreboard">
       <div class="score-player" id="score-x">
         <div class="score-symbol x">X</div>
@@ -114,9 +86,7 @@
         <div class="score-num" id="score-o-num">0</div>
       </div>
     </div>
-
     <div class="turn-indicator" id="turn-indicator">—</div>
-
     <div class="board-wrap">
       <div class="board" id="board">
         <div class="cell" onclick="makeMove(0)"></div>
@@ -129,31 +99,24 @@
         <div class="cell" onclick="makeMove(7)"></div>
         <div class="cell" onclick="makeMove(8)"></div>
       </div>
-
       <div class="result-banner" id="result-banner">
         <div class="result-text" id="result-text">—</div>
         <div class="result-sub">Partida terminada</div>
         <button class="play-again-btn" onclick="resetBoard()">Jugar de nuevo</button>
       </div>
     </div>
-
     <button class="leave-btn" onclick="leaveGame()">Abandonar sala</button>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ MODALS -->
-<!-- Invite sent / waiting -->
 <div class="modal-overlay" id="waiting-modal">
   <div class="modal">
     <h2>Esperando...</h2>
     <p>Invitación enviada a <strong id="waiting-to">—</strong>.<br>Aguarda su respuesta.</p>
-    <div class="modal-actions">
-      <button class="btn btn-outline" onclick="cancelInvite()">Cancelar</button>
-    </div>
+    <div class="modal-actions"><button class="btn btn-outline" onclick="cancelInvite()">Cancelar</button></div>
   </div>
 </div>
 
-<!-- Incoming invite -->
 <div class="modal-overlay" id="invite-modal">
   <div class="modal">
     <h2>¡Reto recibido!</h2>
@@ -165,8 +128,8 @@
   </div>
 </div>
 
-<!-- Toast -->
 <div id="toast"></div>
+
 
 </body>
 </html>
