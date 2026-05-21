@@ -11,5 +11,5 @@ const STATE = {
   score:              { X: 0, O: 0, draws: 0 },
 };
 
-const API_BASE = 'http://localhost:5177/api';
-const HUB_URL  = 'http://localhost:5177/hubs/connectionuser';
+const API_BASE = 'https://tictactoe-app-signalr.onrender.com/api';
+const HUB_URL  = 'https://tictactoe-app-signalr.onrender.com/hubs/connectionuser';
