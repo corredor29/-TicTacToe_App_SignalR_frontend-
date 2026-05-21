@@ -3,16 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TicTacToe</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+<title>TICTACTOE // ONLINE</title>
 <link rel="stylesheet" href="style.css">
-<script src="Api.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="JS/State.js"  defer></script>
+<script src="JS/Api.js"    defer></script>
+<script src="JS/UI.js"     defer></script>
+<script src="JS/Game.js"   defer></script>
+<script src="JS/Hub.js"    defer></script>
+<script src="JS/Actions.js" defer></script>
 </head>
 <body>
 
+<!-- ════════════════════════════ AUTH -->
 <div id="auth-screen" class="screen active">
   <div class="brand">
     <div class="brand-icon">
@@ -20,55 +24,100 @@
       <span></span><span></span><span></span>
       <span></span><span></span><span></span>
     </div>
-    TicTacToe · Online
+    TICTACTOE // ONLINE
   </div>
-  <div class="auth-card">
+
+  <div class="auth-card pixel-box">
     <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchTab('login')">Entrar</button>
-      <button class="auth-tab" onclick="switchTab('register')">Registro</button>
+      <button class="auth-tab active" onclick="UI.switchTab('login')">▶ LOGIN</button>
+      <button class="auth-tab"        onclick="UI.switchTab('register')">▶ NUEVO</button>
     </div>
+
     <div id="login-form">
-      <div class="field"><label>Usuario</label><input type="text" id="login-user" placeholder="tu_nombre" autocomplete="username"></div>
-      <div class="field"><label>Contraseña</label><input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"></div>
-      <button class="btn" onclick="doLogin()">Entrar al juego</button>
+      <div class="field">
+        <label>// USUARIO</label>
+        <input type="text" id="login-user" placeholder="PLAYER_ONE" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>// CONTRASEÑA</label>
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn" onclick="Actions.login()">▶ INICIAR SESIÓN</button>
     </div>
+
     <div id="register-form" class="hidden">
-      <div class="field"><label>Usuario</label><input type="text" id="reg-user" placeholder="tu_nombre" autocomplete="username"></div>
-      <div class="field"><label>Contraseña</label><input type="password" id="reg-pass" placeholder="Min. 8 chars, mayús, número, símbolo" autocomplete="new-password"></div>
-      <button class="btn" onclick="doRegister()">Crear cuenta</button>
+      <div class="field">
+        <label>// USUARIO</label>
+        <input type="text" id="reg-user" placeholder="PLAYER_ONE" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>// CONTRASEÑA</label>
+        <input type="password" id="reg-pass" placeholder="8+ chars, A-Z, 0-9, símbolo" autocomplete="new-password">
+      </div>
+      <button class="btn" onclick="Actions.register()">▶ CREAR CUENTA</button>
     </div>
+
     <p class="error-msg" id="auth-error"></p>
+
+    <div class="google-divider">── OR ──</div>
+    <div id="g_id_onload"
+      data-client_id="801237302057-j3ise91bju39hvchmubs9j5rch1h7pb0.apps.googleusercontent.com"
+      data-callback="handleGoogleLogin"
+      data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin"
+      data-type="standard"
+      data-size="large"
+      data-theme="filled_black"
+      data-text="continue_with"
+      data-shape="rectangular"
+      data-width="348">
+    </div>
   </div>
 </div>
 
+<!-- ════════════════════════════ LOBBY -->
 <div id="lobby-screen" class="screen">
   <div class="lobby-layout">
+
     <aside class="sidebar">
       <div class="sidebar-header">
-        <span class="sidebar-title">Online</span>
+        <span class="sidebar-title">// PLAYERS</span>
         <span class="me-badge" id="me-badge">—</span>
       </div>
+
       <div class="user-list" id="user-list"></div>
+
       <div class="sidebar-footer">
-        <button class="logout-btn" onclick="doLogout()">↩ Salir</button>
+        <div class="status-selector">
+          <button class="status-btn s1 active" onclick="Actions.setStatus(1)">● ON</button>
+          <button class="status-btn s2"        onclick="Actions.setStatus(2)">● PLAY</button>
+          <button class="status-btn s3"        onclick="Actions.setStatus(3)">● DND</button>
+        </div>
+        <button class="ranking-btn" onclick="UI.showRanking()">▶ RANKING</button>
+        <button class="logout-btn"  onclick="Actions.logout()">◀ SALIR</button>
       </div>
     </aside>
+
     <main class="lobby-main">
       <div class="lobby-hero">
         <h1>TIC<span>TAC</span>TOE</h1>
-        <p>Reta a un jugador online para empezar</p>
+        <p>// SELECCIONA UN JUGADOR Y PRESIONA RETAR</p>
         <div class="online-count">
           <div class="pulse"></div>
-          <span id="online-count-text">0 jugadores en línea</span>
+          <span id="online-count-text">0 JUGADORES ONLINE</span>
         </div>
       </div>
     </main>
+
   </div>
 </div>
 
+<!-- ════════════════════════════ GAME -->
 <div id="game-screen" class="screen">
   <div class="game-layout">
-    <div class="scoreboard">
+
+    <div class="scoreboard pixel-box">
       <div class="score-player" id="score-x">
         <div class="score-symbol x">X</div>
         <div class="score-username" id="score-x-name">—</div>
@@ -76,7 +125,7 @@
       </div>
       <div class="score-divider"></div>
       <div class="score-center">
-        <div class="score-draws">Empates</div>
+        <div class="score-draws">EMP</div>
         <div class="score-draws-num" id="score-draws">0</div>
       </div>
       <div class="score-divider"></div>
@@ -86,50 +135,98 @@
         <div class="score-num" id="score-o-num">0</div>
       </div>
     </div>
-    <div class="turn-indicator" id="turn-indicator">—</div>
-    <div class="board-wrap">
+
+    <div class="turn-indicator" id="turn-indicator"></div>
+
+    <div id="board-wrap">
       <div class="board" id="board">
-        <div class="cell" onclick="makeMove(0)"></div>
-        <div class="cell" onclick="makeMove(1)"></div>
-        <div class="cell" onclick="makeMove(2)"></div>
-        <div class="cell" onclick="makeMove(3)"></div>
-        <div class="cell" onclick="makeMove(4)"></div>
-        <div class="cell" onclick="makeMove(5)"></div>
-        <div class="cell" onclick="makeMove(6)"></div>
-        <div class="cell" onclick="makeMove(7)"></div>
-        <div class="cell" onclick="makeMove(8)"></div>
+        <div class="cell" onclick="GAME.makeMove(0)"></div>
+        <div class="cell" onclick="GAME.makeMove(1)"></div>
+        <div class="cell" onclick="GAME.makeMove(2)"></div>
+        <div class="cell" onclick="GAME.makeMove(3)"></div>
+        <div class="cell" onclick="GAME.makeMove(4)"></div>
+        <div class="cell" onclick="GAME.makeMove(5)"></div>
+        <div class="cell" onclick="GAME.makeMove(6)"></div>
+        <div class="cell" onclick="GAME.makeMove(7)"></div>
+        <div class="cell" onclick="GAME.makeMove(8)"></div>
       </div>
+
       <div class="result-banner" id="result-banner">
-        <div class="result-text" id="result-text">—</div>
-        <div class="result-sub">Partida terminada</div>
-        <button class="play-again-btn" onclick="resetBoard()">Jugar de nuevo</button>
+        <div class="result-text" id="result-text"></div>
+        <div class="result-sub">// GAME OVER</div>
+        <div class="result-actions">
+          <button class="play-again-btn" onclick="Actions.requestRematch()">▶ REVANCHA</button>
+          <button class="leave-btn"      onclick="Actions.leaveGame()">◀ SALIR</button>
+        </div>
       </div>
     </div>
-    <button class="leave-btn" onclick="leaveGame()">Abandonar sala</button>
+
+    <button class="leave-btn" onclick="Actions.leaveGame()">◀ ABANDONAR</button>
   </div>
 </div>
 
+<!-- ════════════════════════════ MODALS -->
+
 <div class="modal-overlay" id="waiting-modal">
-  <div class="modal">
-    <h2>Esperando...</h2>
-    <p>Invitación enviada a <strong id="waiting-to">—</strong>.<br>Aguarda su respuesta.</p>
-    <div class="modal-actions"><button class="btn btn-outline" onclick="cancelInvite()">Cancelar</button></div>
+  <div class="modal pixel-box">
+    <h2>// ESPERANDO...</h2>
+    <p>RETO ENVIADO A<br><strong id="waiting-to">—</strong></p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="Actions.cancelInvite()">◀ CANCELAR</button>
+    </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="invite-modal">
-  <div class="modal">
-    <h2>¡Reto recibido!</h2>
-    <p><strong id="invite-from">—</strong> te desafía a una partida de TicTacToe.</p>
+  <div class="modal pixel-box">
+    <h2>// ¡RETO RECIBIDO!</h2>
+    <p><strong id="invite-from">—</strong><br>TE DESAFÍA A JUGAR</p>
     <div class="modal-actions">
-      <button class="btn btn-outline" onclick="rejectInvite()">Rechazar</button>
-      <button class="btn" onclick="acceptInvite()">Aceptar</button>
+      <button class="btn btn-outline" onclick="Actions.rejectInvite()">✕ RECHAZAR</button>
+      <button class="btn"             onclick="Actions.acceptInvite()">▶ ACEPTAR</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="rematch-modal">
+  <div class="modal pixel-box">
+    <h2>// ¡REVANCHA!</h2>
+    <p><strong id="rematch-from">—</strong><br>QUIERE REVANCHA</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="Actions.rejectRematch()">✕ RECHAZAR</button>
+      <button class="btn"             onclick="Actions.acceptRematch()">▶ ACEPTAR</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="rematch-waiting-modal">
+  <div class="modal pixel-box">
+    <h2>// ESPERANDO...</h2>
+    <p>REVANCHA ENVIADA A<br><strong id="rematch-waiting-to">—</strong></p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="Actions.cancelRematch()">◀ CANCELAR</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="ranking-modal">
+  <div class="modal modal-wide pixel-box">
+    <h2>// RANKING GLOBAL</h2>
+    <table class="ranking-table">
+      <thead>
+        <tr>
+          <th>#</th><th>JUGADOR</th><th>V</th><th>D</th><th>E</th><th>PJ</th><th>WIN%</th>
+        </tr>
+      </thead>
+      <tbody id="ranking-body"></tbody>
+    </table>
+    <div class="modal-actions" style="justify-content:center;margin-top:20px">
+      <button class="btn btn-outline" style="width:auto;padding:8px 28px" onclick="UI.closeModal('ranking-modal')">◀ CERRAR</button>
     </div>
   </div>
 </div>
 
 <div id="toast"></div>
-
 
 </body>
 </html>
