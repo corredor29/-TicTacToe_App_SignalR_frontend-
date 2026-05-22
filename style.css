@@ -549,20 +549,24 @@ body::after {
 
 .board {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 90px);
+  grid-template-rows: repeat(3, 90px);
   gap: 4px;
-  width: 300px; height: 300px;
   background: var(--border);
   border: 3px solid var(--border);
   padding: 4px;
 }
 
 .cell {
+  width: 90px;
+  height: 90px;
   background: var(--panel);
   display: flex; align-items: center; justify-content: center;
-  font-size: 48px; font-family: var(--pixel);
+  font-size: 40px; font-family: var(--pixel);
   cursor: pointer; transition: background 0.1s;
   position: relative; user-select: none;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 .cell:hover:not(.taken) { background: rgba(0,255,136,0.06); }
 .cell.taken  { cursor: default; }
